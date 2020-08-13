@@ -2,7 +2,6 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const User = require('../models/users.model');
 const { InvalidInput, InvalidLogin } = require('../errors');
 
 const router = express.Router();
