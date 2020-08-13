@@ -7,7 +7,7 @@ module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient');
   const users = sequelizeClient.define('users', {
   
-    email: {
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
@@ -16,8 +16,24 @@ module.exports = function (app) {
       type: DataTypes.STRING,
       allowNull: false
     },
-  
-  
+    role: {
+      type: DataTypes.ENUM('user', 'admin'),
+      defaultValue: 'user',
+      allowNull: false
+    },
+    first_name: {
+      type: DataTypes.STRING,
+      validate: {
+        isAlpha: true
+      }
+    },
+    last_name: {
+      type: DataTypes.STRING,
+      validate: {
+        isAlpha: true
+      }
+    }
+
   }, {
     hooks: {
       beforeCount(options) {
