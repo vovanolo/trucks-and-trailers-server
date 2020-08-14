@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.hasMany(models.Driver);
+      User.hasMany(models.Truck);
     }
   };
   User.init({
@@ -25,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     role: {
-      type: DataTypes.ENUM('user', 'admib'),
+      type: DataTypes.ENUM('user', 'admin'),
       defaultValue: 'user'
     },
     firstName: DataTypes.STRING(64),
