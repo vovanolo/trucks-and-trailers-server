@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Driver extends Model {
+  class DayInfo extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,26 +11,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Driver.belongsTo(models.User);
-      Driver.hasMany(models.Truck);
-      Driver.hasMany(models.Trailer);
-      Driver.hasMany(models.DayInfo);
+      DayInfo.belongsTo(models.Driver);
     }
   };
-  Driver.init({
-    firstName: {
-      type: DataTypes.STRING(64),
+  DayInfo.init({
+    dateTime: {
+      type: DataTypes.DATE,
       allowNull: false
     },
-    lastName: DataTypes.STRING(64),
-    comment: DataTypes.TEXT,
-    rate: {
-      type: DataTypes.FLOAT,
-      allowNull: false
+    location: DataTypes.STRING,
+    value: DataTypes.FLOAT,
+    status: {
+      type: DataTypes.ENUM('off', 'localRun', 'inTransit'),
+      defaultValue: 'off'
     }
   }, {
     sequelize,
-    modelName: 'Driver',
+    modelName: 'DayInfo',
   });
-  return Driver;
+  return DayInfo;
 };
