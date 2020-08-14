@@ -16,9 +16,15 @@ function InvalidInput(res, next, message) {
   next(error);
 }
 
+function InternalServerError(res, next, message) {
+  const error = message || new Error('Internal server error!');
+  res.status(500);
+  next(error);
+}
 
 module.exports = {
   InvalidLogin,
   NotFound,
-  InvalidInput
+  InvalidInput,
+  InternalServerError
 };
