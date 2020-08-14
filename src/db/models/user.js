@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.hasMany(models.Driver);
       User.hasMany(models.Truck);
+      User.hasMany(models.Trailer);
     }
   };
   User.init({
