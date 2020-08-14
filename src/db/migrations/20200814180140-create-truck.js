@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.TEXT
       },
       rate: {
-        type: Sequelize.FLOAT(64)
+        type: Sequelize.FLOAT
       },
       ownedByCompany: {
         type: Sequelize.BOOLEAN,

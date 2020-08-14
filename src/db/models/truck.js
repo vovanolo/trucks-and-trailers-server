@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     comment: DataTypes.TEXT,
-    rate: DataTypes.FLOAT(64),
+    rate: DataTypes.FLOAT,
     ownedByCompany: {
       type: DataTypes.BOOLEAN,
       defaultValue: false

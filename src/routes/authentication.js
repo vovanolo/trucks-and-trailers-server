@@ -3,8 +3,11 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 const { InvalidInput, InvalidLogin } = require('../errors');
+const models = require('../db/models');
 
 const router = express.Router();
+
+const User = models.User;
 
 function signJwtToken(payload) {
   return new Promise((resolve, reject) => {

@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   Trailer.init({
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(64),
       allowNull: false
     },
     comment: DataTypes.TEXT,
