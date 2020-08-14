@@ -20,7 +20,7 @@ function signJwtToken(payload) {
   });
 }
 
-router.get('/', async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   const userInput = {
     username: req.body.username,
     password: req.body.password
@@ -33,25 +33,28 @@ router.get('/', async (req, res, next) => {
   try {
     const user = await User.findOne({ username: userInput.username });
 
-    const passMatch = await bcrypt.compare(userInput.password, user.password);
-
-    if (passMatch) {
-      // generate JWT token and send it back
-      const payload = { ...user };
-      delete payload.password;
-
-      const token = await signJwtToken(payload);
-
-      const responseMessage = {
-        accessToken: token,
-        user: {
-          ...payload
-        }
-      };
-      res.json(responseMessage);
+    if (!user) {
+      InvalidLogin(res, next);
     }
     else {
-      InvalidLogin(res, next);
+      const passMatch = await bcrypt.compare(userInput.password, user.password);
+
+      if (passMatch) {
+        // generate JWT token and send it back
+        const payload = JSON.parse(JSON.stringify(user));
+        delete payload.password;
+
+        const token = await signJwtToken(payload);
+
+        const responseMessage = {
+          accessToken: token,
+          user: payload
+        };
+        res.json(responseMessage);
+      }
+      else {
+        InvalidLogin(res, next);
+      }
     }
   } catch (error) {
     InvalidLogin(res, next, error);
