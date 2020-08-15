@@ -5,7 +5,7 @@ const users = require('./users');
 
 const router = express.Router();
 
-router.use('/authentication', authentication);
+router.use('/authenticate', authentication);
 router.use('/users', users);
 
 module.exports = router;
