@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Driver);
       User.hasMany(models.Truck);
       User.hasMany(models.Trailer);
+      User.hasMany(models.DayInfo);
     }
   };
   User.init({

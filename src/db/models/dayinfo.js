@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       DayInfo.belongsTo(models.Driver);
+      DayInfo.belongsTo(models.User);
     }
   };
   DayInfo.init({
