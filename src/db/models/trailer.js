@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Trailer.belongsTo(models.User);
-      Trailer.belongsTo(models.Driver);
+      Trailer.belongsTo(models.User, { foreignKey: 'userId' });
+      Trailer.belongsTo(models.Driver, { foreignKey: 'driverId' });
     }
   };
   Trailer.init({
@@ -21,7 +21,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     comment: DataTypes.TEXT,
-    location: DataTypes.STRING
+    location: DataTypes.STRING,
+    driverId: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Trailer',

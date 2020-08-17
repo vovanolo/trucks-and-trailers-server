@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      DayInfo.belongsTo(models.Driver);
-      DayInfo.belongsTo(models.User);
+      DayInfo.belongsTo(models.Driver, { foreignKey: 'driverId' });
+      DayInfo.belongsTo(models.User, { foreignKey: 'userId' });
     }
   };
   DayInfo.init({
@@ -25,7 +25,9 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.ENUM('off', 'localRun', 'inTransit'),
       defaultValue: 'off'
-    }
+    },
+    driverId: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'DayInfo',

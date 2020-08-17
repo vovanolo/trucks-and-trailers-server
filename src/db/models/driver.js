@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Driver.belongsTo(models.User);
+      Driver.belongsTo(models.User, { foreignKey: 'userId' });
       Driver.hasMany(models.Truck);
       Driver.hasMany(models.Trailer);
       Driver.hasMany(models.DayInfo);
@@ -27,7 +27,8 @@ module.exports = (sequelize, DataTypes) => {
     rate: {
       type: DataTypes.FLOAT,
       allowNull: false
-    }
+    },
+    userId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Driver',
