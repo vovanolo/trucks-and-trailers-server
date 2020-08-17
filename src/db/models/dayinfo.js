@@ -26,8 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('off', 'localRun', 'inTransit'),
       defaultValue: 'off'
     },
-    driverId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER
+    driverId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'DayInfo',

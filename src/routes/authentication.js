@@ -44,15 +44,17 @@ router.post('/', async (req, res, next) => {
       }
     
       try {
-        const user = await User.findOne({ username: userInput.username });
+        const user = await User.findOne({
+          where: {
+            username: userInput.username
+          }
+        });
     
         if (!user) {
           InvalidLogin(res, next);
         }
         else {
-          const passMatch = await bcrypt.compare(userInput.password, user.password);
-    
-          if (passMatch) {
+          if (await user.validPassword(userInput.password)) {
             // generate JWT token and send it back
             const payload = JSON.parse(JSON.stringify(user));
             delete payload.password;

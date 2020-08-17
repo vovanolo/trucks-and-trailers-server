@@ -24,7 +24,6 @@ module.exports = {
       },
       driverId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
           model: 'Drivers',
           key: 'id'
