@@ -17,10 +17,11 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.DayInfo);
     }
 
-    validPassword = async (password) => {
-      return await bcrypt.compare(password, this.password);
+    async validPassword(password) {
+      const check = await bcrypt.compare(password, this.password);
+      return check;
     }
-  };
+  }
 
   User.init({
     username: {
@@ -47,6 +48,6 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   });
-  
+
   return User;
 };

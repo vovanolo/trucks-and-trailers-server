@@ -1,17 +1,16 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
 
 const models = require('../db/models');
 const { NotFound, InternalServerError } = require('../errors');
 
 const router = express.Router();
 
-const User = models.User;
+const { User } = models;
 
 router.get('/', async (req, res, next) => {
   try {
     const users = await User.findAll();
-    
+
     res.json(users);
   } catch (error) {
     InternalServerError(res, next, error);
@@ -28,7 +27,6 @@ router.get('/:id', async (req, res, next) => {
     else {
       res.json(user);
     }
-
   } catch (error) {
     InternalServerError(res, next, error);
   }
@@ -43,6 +41,21 @@ router.post('/', async (req, res, next) => {
     });
 
     res.json(newUser);
+  } catch (error) {
+    InternalServerError(res, next, error);
+  }
+});
+
+router.patch('/:id', async (req, res, next) => {
+  try {
+    const userInput = req.body;
+    const updatedUser = await User.update({ ...userInput }, {
+      returning: true,
+      where: {
+        id: req.params.id
+      }
+    });
+    res.json(updatedUser[1]);
   } catch (error) {
     InternalServerError(res, next, error);
   }
