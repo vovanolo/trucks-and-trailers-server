@@ -1,7 +1,8 @@
 const express = require('express');
 
 const models = require('../db/models');
-const { NotFound, InternalServerError } = require('../errors');
+const { NotFound, InternalServerError, Unauthorized } = require('../errors');
+const { isLoggedIn } = require('../middlewares');
 
 const router = express.Router();
 
@@ -46,16 +47,30 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.patch('/:id', async (req, res, next) => {
+router.patch('/:id', isLoggedIn, async (req, res, next) => {
   try {
-    const userInput = req.body;
-    const updatedUser = await User.update({ ...userInput }, {
-      returning: true,
-      where: {
-        id: req.params.id
-      }
-    });
-    res.json(updatedUser[1]);
+    const isOwner = req.user.user.id == req.params.id;
+    const isAdmin = req.user.user.role === 'admin';
+
+    if (!isOwner && !isAdmin) {
+      Unauthorized(res, next);
+    }
+    else {
+      const userInput = req.body;
+
+      const userAllowedFields = ['firstName', 'lastName', 'username', 'password'];
+      const adminAllowedFields = [...userAllowedFields, 'role'];
+      
+      const updatedUser = await User.update({ ...userInput }, {
+        returning: true,
+        where: {
+          id: req.params.id
+        },
+        fields: req.user.user.role === 'admin' ? adminAllowedFields : userAllowedFields
+      });
+
+      res.json(updatedUser);
+    }
   } catch (error) {
     InternalServerError(res, next, error);
   }

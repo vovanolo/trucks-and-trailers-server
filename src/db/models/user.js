@@ -18,10 +18,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     async validPassword(password) {
-      const check = await bcrypt.compare(password, this.password);
-      return check;
+      return await bcrypt.compare(password, this.password);
     }
-  }
+  };
 
   User.init({
     username: {
@@ -45,6 +44,19 @@ module.exports = (sequelize, DataTypes) => {
     hooks: {
       beforeCreate: async (user) => {
         user.password = await bcrypt.hash(user.password, parseInt(process.env.SALT_ROUNDS));
+      },
+      beforeUpdate: async (user) => {
+        if (user.password) {
+          user.password = await bcrypt.hash(user.password, parseInt(process.env.SALT_ROUNDS));
+        }
+      },
+      beforeBulkCreate: async (user) => {
+        user.attributes.password = await bcrypt.hash(user.attributes.password, parseInt(process.env.SALT_ROUNDS));
+      },
+      beforeBulkUpdate: async (user) => {
+        if (user.attributes.password) {
+          user.attributes.password = await bcrypt.hash(user.attributes.password, parseInt(process.env.SALT_ROUNDS));
+        }
       }
     }
   });
