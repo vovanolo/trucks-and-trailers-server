@@ -1,4 +1,5 @@
-const jwt = require('jsonwebtoken');
+const { Unauthorized } = require('../errors');
+const { verifyJwtToken } = require('../helpers');
 
 function notFound(req, res, next) {
   const error = new Error('Not found');
@@ -18,10 +19,22 @@ function errorHandler(err, req, res, next) {
 }
 
 function isLoggedIn(req, res, next) {
-
+  try {
+    const userToken = req.headers.authorization.split(' ')[1];
+    const payload = await verifyJwtToken(userToken);
+    const userData = {
+      accessToken: userToken,
+      user: payload
+    };
+    req.user = userData;
+  } catch (error) {
+    Unauthorized(res, next);
+  }
+  break;
 }
 
 module.exports = {
   notFound,
-  errorHandler
+  errorHandler,
+  isLoggedIn
 };

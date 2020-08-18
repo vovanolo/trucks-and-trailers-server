@@ -1,35 +1,12 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 
-const { InvalidInput, InvalidLogin, InternalServerError } = require('../errors');
 const models = require('../db/models');
+const { UnprocessableEntity, Unauthorized, InternalServerError } = require('../errors');
+const { signJwtToken, verifyJwtToken } = require('../helpers');
 
 const router = express.Router();
 
 const User = models.User;
-
-function signJwtToken(payload) {
-  return new Promise((resolve, reject) => {
-    jwt.sign(payload, process.env.JWT_KEY, (error, token) => {
-      if (error) reject(error);
-      else {
-        resolve(token);
-      }
-    })
-  });
-}
-
-function verifyJwtToken(token) {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, process.env.JWT_KEY, (error, payload) => {
-      if (error) reject(error);
-      else {
-        resolve(payload);
-      }
-    });
-  })
-}
 
 router.post('/', async (req, res, next) => {
   switch (req.body.strategy) {
@@ -40,7 +17,7 @@ router.post('/', async (req, res, next) => {
       };
     
       if (!userInput.username || !userInput.password) {
-        InvalidInput(res, next);
+        UnprocessableEntity(res, next);
       }
     
       try {
@@ -51,7 +28,7 @@ router.post('/', async (req, res, next) => {
         });
     
         if (!user) {
-          InvalidLogin(res, next);
+          Unauthorized(res, next);
         }
         else {
           if (await user.validPassword(userInput.password)) {
@@ -68,11 +45,11 @@ router.post('/', async (req, res, next) => {
             res.json(responseMessage);
           }
           else {
-            InvalidLogin(res, next);
+            Unauthorized(res, next);
           }
         }
       } catch (error) {
-        InvalidLogin(res, next, error);
+        Unauthorized(res, next, error);
       }
       break;
 
@@ -91,7 +68,7 @@ router.post('/', async (req, res, next) => {
       break;
   
     default:
-      InvalidInput(res, next);
+      UnprocessableEntity(res, next);
       break;
   }
 });
