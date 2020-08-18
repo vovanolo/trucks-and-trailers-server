@@ -27,10 +27,10 @@ async function isLoggedIn(req, res, next) {
       user: payload
     };
     req.user = userData;
+    next();
   } catch (error) {
     Unauthorized(res, next);
   }
-  break;
 }
 
 module.exports = {

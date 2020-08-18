@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 function signJwtToken(payload) {
   return new Promise((resolve, reject) => {
     jwt.sign(payload, process.env.JWT_KEY, (error, token) => {
