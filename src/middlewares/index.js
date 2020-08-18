@@ -18,7 +18,7 @@ function errorHandler(err, req, res, next) {
   res.status(statusCode).json(responseMessage);
 }
 
-function isLoggedIn(req, res, next) {
+async function isLoggedIn(req, res, next) {
   try {
     const userToken = req.headers.authorization.split(' ')[1];
     const payload = await verifyJwtToken(userToken);
