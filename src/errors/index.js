@@ -1,5 +1,5 @@
-function InvalidLogin(res, next, message) {
-  const error = message || new Error('Invalid login!');
+function Unauthorized(res, next, message) {
+  const error = message || new Error('Unauthorized!');
   res.status(401);
   next(error);
 }
@@ -10,8 +10,8 @@ function NotFound(res, next, message) {
   next(error);
 }
 
-function InvalidInput(res, next, message) {
-  const error = message || new Error('Invalid input!');
+function UnprocessableEntity(res, next, message) {
+  const error = message || new Error('Unprocessable Entity!');
   res.status(422);
   next(error);
 }
@@ -23,8 +23,8 @@ function InternalServerError(res, next, message) {
 }
 
 module.exports = {
-  InvalidLogin,
+  Unauthorized,
   NotFound,
-  InvalidInput,
+  UnprocessableEntity,
   InternalServerError
 };

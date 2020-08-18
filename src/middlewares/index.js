@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 function notFound(req, res, next) {
   const error = new Error('Not found');
   res.status(404);
@@ -13,6 +15,10 @@ function errorHandler(err, req, res, next) {
   };
   console.error(responseMessage);
   res.status(statusCode).json(responseMessage);
+}
+
+function isLoggedIn(req, res, next) {
+
 }
 
 module.exports = {
