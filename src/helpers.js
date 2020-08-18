@@ -7,7 +7,7 @@ function signJwtToken(payload) {
       else {
         resolve(token);
       }
-    })
+    });
   });
 }
 
@@ -19,7 +19,7 @@ function verifyJwtToken(token) {
         resolve(payload);
       }
     });
-  })
+  });
 }
 
 module.exports = {

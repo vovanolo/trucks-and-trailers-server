@@ -1,13 +1,13 @@
 const express = require('express');
 
 const models = require('../db/models');
-const { UnprocessableEntity, Unauthorized, InternalServerError } = require('../errors');
+const { UnprocessableEntity, Unauthorized } = require('../errors');
 const { signJwtToken } = require('../helpers');
 const { isLoggedIn } = require('../middlewares');
 
 const router = express.Router();
 
-const User = models.User;
+const { User } = models;
 
 router.post('/authenticate', async (req, res, next) => {
   const userInput = {
@@ -25,27 +25,22 @@ router.post('/authenticate', async (req, res, next) => {
           username: userInput.username
         }
       });
-  
-      if (!user) {
-        Unauthorized(res, next);
+
+      if (await user.validPassword(userInput.password)) {
+        // generate JWT token and send it back
+        const payload = JSON.parse(JSON.stringify(user));
+        delete payload.password;
+
+        const token = await signJwtToken(payload);
+
+        const responseMessage = {
+          accessToken: token,
+          user: payload
+        };
+        res.json(responseMessage);
       }
       else {
-        if (await user.validPassword(userInput.password)) {
-          // generate JWT token and send it back
-          const payload = JSON.parse(JSON.stringify(user));
-          delete payload.password;
-  
-          const token = await signJwtToken(payload);
-  
-          const responseMessage = {
-            accessToken: token,
-            user: payload
-          };
-          res.json(responseMessage);
-        }
-        else {
-          Unauthorized(res, next);
-        }
+        Unauthorized(res, next);
       }
     } catch (error) {
       Unauthorized(res, next, error);
@@ -53,7 +48,7 @@ router.post('/authenticate', async (req, res, next) => {
   }
 });
 
-router.post('/reauthenticate', isLoggedIn, (req, res, next) => {
+router.post('/reauthenticate', isLoggedIn, (req, res) => {
   res.json(req.user);
 });
 
