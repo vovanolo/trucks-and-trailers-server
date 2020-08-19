@@ -10,7 +10,11 @@ const { User } = models;
 
 router.get('/', async (req, res, next) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      attributes: {
+        exclude: ['password']
+      }
+    });
 
     res.json(users);
   } catch (error) {
@@ -20,7 +24,11 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    const user = await User.findByPk(req.params.id);
+    const user = await User.findByPk(req.params.id, {
+      attributes: {
+        exclude: ['password']
+      }
+    });
 
     if (!user) {
       NotFound(res, next);
@@ -41,7 +49,10 @@ router.post('/', async (req, res, next) => {
       fields: ['username', 'password', 'firstName', 'lastName']
     });
 
-    res.json(newUser);
+    const userResponse = JSON.parse(JSON.stringify(newUser));
+    delete userResponse.password;
+
+    res.json(userResponse);
   } catch (error) {
     InternalServerError(res, next, error);
   }
@@ -69,7 +80,26 @@ router.patch('/:id', isLoggedIn, async (req, res, next) => {
         fields: req.user.user.role === 'admin' ? adminAllowedFields : userAllowedFields
       });
 
-      res.json(updatedUser);
+      const userResponse = JSON.parse(JSON.stringify(updatedUser[1]));
+      userResponse.forEach((userData) => delete userData.password);
+
+      res.json(userResponse);
+    }
+  } catch (error) {
+    InternalServerError(res, next, error);
+  }
+});
+
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+
+    if (!user) {
+      NotFound(res, next);
+    }
+    else {
+      await user.destroy();
+      res.json(`User ${req.params.id} deleted successfully`);
     }
   } catch (error) {
     InternalServerError(res, next, error);
