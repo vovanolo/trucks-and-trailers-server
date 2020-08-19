@@ -34,8 +34,18 @@ async function isLoggedIn(req, res, next) {
   }
 }
 
+async function isAdmin(req, res, next) {
+  if (req.user.user.role !== 'admin') {
+    Unauthorized(res, next);
+  }
+  else {
+    next();
+  }
+}
+
 module.exports = {
   notFound,
   errorHandler,
-  isLoggedIn
+  isLoggedIn,
+  isAdmin
 };

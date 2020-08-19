@@ -2,7 +2,7 @@ const express = require('express');
 
 const models = require('../db/models');
 const { NotFound, InternalServerError, Unauthorized } = require('../errors');
-const { isLoggedIn } = require('../middlewares');
+const { isLoggedIn, isAdmin } = require('../middlewares');
 
 const router = express.Router();
 
@@ -41,7 +41,7 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', isLoggedIn, isAdmin, async (req, res, next) => {
   try {
     const newUser = await User.create({
       ...req.body

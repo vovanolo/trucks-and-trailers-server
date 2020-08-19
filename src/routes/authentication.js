@@ -40,10 +40,10 @@ router.post('/authenticate', async (req, res, next) => {
         res.json(responseMessage);
       }
       else {
-        Unauthorized(res, next);
+        UnprocessableEntity(res, next);
       }
     } catch (error) {
-      Unauthorized(res, next, error);
+      UnprocessableEntity(res, next, error);
     }
   }
 });
