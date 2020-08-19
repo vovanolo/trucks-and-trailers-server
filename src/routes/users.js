@@ -2,7 +2,7 @@ const express = require('express');
 
 const models = require('../db/models');
 const { NotFound, InternalServerError, Unauthorized } = require('../errors');
-const { isLoggedIn, isAdmin } = require('../middlewares');
+const { isLoggedIn, isAdmin, isOwnerOrAdmin } = require('../middlewares');
 
 const router = express.Router();
 
@@ -58,33 +58,25 @@ router.post('/', isLoggedIn, isAdmin, async (req, res, next) => {
   }
 });
 
-router.patch('/:id', isLoggedIn, async (req, res, next) => {
+router.patch('/:id', isLoggedIn, isOwnerOrAdmin, async (req, res, next) => {
   try {
-    const isOwner = req.user.user.id == req.params.id;
-    const isAdmin = req.user.user.role === 'admin';
+    const userInput = req.body;
 
-    if (!isOwner && !isAdmin) {
-      Unauthorized(res, next);
-    }
-    else {
-      const userInput = req.body;
+    const userAllowedFields = ['firstName', 'lastName', 'username', 'password'];
+    const adminAllowedFields = [...userAllowedFields, 'role'];
+    
+    const updatedUser = await User.update({ ...userInput }, {
+      returning: true,
+      where: {
+        id: req.params.id
+      },
+      fields: req.user.user.role === 'admin' ? adminAllowedFields : userAllowedFields
+    });
 
-      const userAllowedFields = ['firstName', 'lastName', 'username', 'password'];
-      const adminAllowedFields = [...userAllowedFields, 'role'];
-      
-      const updatedUser = await User.update({ ...userInput }, {
-        returning: true,
-        where: {
-          id: req.params.id
-        },
-        fields: req.user.user.role === 'admin' ? adminAllowedFields : userAllowedFields
-      });
+    const userResponse = JSON.parse(JSON.stringify(updatedUser[1]));
+    userResponse.forEach((userData) => delete userData.password);
 
-      const userResponse = JSON.parse(JSON.stringify(updatedUser[1]));
-      userResponse.forEach((userData) => delete userData.password);
-
-      res.json(userResponse);
-    }
+    res.json(userResponse);
   } catch (error) {
     InternalServerError(res, next, error);
   }

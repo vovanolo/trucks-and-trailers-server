@@ -43,9 +43,22 @@ async function isAdmin(req, res, next) {
   }
 }
 
+async function isOwnerOrAdmin(req, res, next) {
+  const isOwner = req.user.user.id == req.params.id;
+  const isAdmin = req.user.user.role === 'admin';
+
+  if (!isOwner && !isAdmin) {
+    Unauthorized(res, next);
+  }
+  else {
+    next();
+  }
+}
+
 module.exports = {
   notFound,
   errorHandler,
   isLoggedIn,
-  isAdmin
+  isAdmin,
+  isOwnerOrAdmin
 };
