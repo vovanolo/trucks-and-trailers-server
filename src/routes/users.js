@@ -2,11 +2,14 @@ const express = require('express');
 
 const models = require('../db/models');
 const { NotFound, InternalServerError, Unauthorized } = require('../errors');
-const { isLoggedIn, isAdmin, isOwnerOrAdmin } = require('../middlewares');
+const { isLoggedIn, isAdmin } = require('../middlewares');
 
 const router = express.Router();
 
 const { User } = models;
+
+router.use(isLoggedIn);
+router.use(isAdmin);
 
 router.get('/', async (req, res, next) => {
   try {
@@ -41,12 +44,12 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-router.post('/', isLoggedIn, isAdmin, async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   try {
     const newUser = await User.create({
       ...req.body
     }, {
-      fields: ['username', 'password', 'firstName', 'lastName']
+      fields: ['username', 'password', 'firstName', 'lastName', 'role']
     });
 
     const userResponse = JSON.parse(JSON.stringify(newUser));
@@ -58,19 +61,16 @@ router.post('/', isLoggedIn, isAdmin, async (req, res, next) => {
   }
 });
 
-router.patch('/:id', isLoggedIn, isOwnerOrAdmin, async (req, res, next) => {
+router.patch('/:id', async (req, res, next) => {
   try {
     const userInput = req.body;
-
-    const userAllowedFields = ['firstName', 'lastName', 'username', 'password'];
-    const adminAllowedFields = [...userAllowedFields, 'role'];
     
     const updatedUser = await User.update({ ...userInput }, {
       returning: true,
       where: {
         id: req.params.id
       },
-      fields: req.user.user.role === 'admin' ? adminAllowedFields : userAllowedFields
+      fields: ['firstName', 'lastName', 'username', 'password', 'role']
     });
 
     const userResponse = JSON.parse(JSON.stringify(updatedUser[1]));
