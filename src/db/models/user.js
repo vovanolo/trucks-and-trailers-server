@@ -11,10 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasMany(models.Driver);
-      User.hasMany(models.Truck);
-      User.hasMany(models.Trailer);
-      User.hasMany(models.DayInfo);
+      User.hasMany(models.Driver, { foreignKey: 'userId'});
+      User.hasMany(models.Truck, { foreignKey: 'userId'});
+      User.hasMany(models.Trailer, { foreignKey: 'userId'});
+      User.hasMany(models.DayInfo, { foreignKey: 'userId'});
     }
 
     async validPassword(password) {
@@ -60,6 +60,5 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   });
-
   return User;
 };

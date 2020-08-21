@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      DayInfo.belongsTo(models.Driver, { foreignKey: 'driverId' });
-      DayInfo.belongsTo(models.User, { foreignKey: 'userId' });
+      DayInfo.belongsTo(models.Driver, { foreignKey: 'driverId'});
+      DayInfo.belongsTo(models.User, { foreignKey: 'userId'});
     }
   };
   DayInfo.init({
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     driverId: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'DayInfo',
+    modelName: 'DayInfo'
   });
   return DayInfo;
 };

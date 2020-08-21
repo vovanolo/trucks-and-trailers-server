@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Truck.belongsTo(models.User, { foreignKey: 'userId' });
-      Truck.belongsTo(models.Driver, { foreignKey: 'driverId' });
+      Truck.belongsTo(models.User, { foreignKey: 'userId'});
+      Truck.belongsTo(models.Driver, { foreignKey: 'driverId'});
     }
   };
   Truck.init({
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Truck',
+    modelName: 'Truck'
   });
   return Truck;
 };
