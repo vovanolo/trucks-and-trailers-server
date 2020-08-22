@@ -22,10 +22,12 @@ module.exports = {
         defaultValue: 'user'
       },
       firstName: {
-        type: Sequelize.STRING(64)
+        type: Sequelize.STRING(64),
+        allowNull: false
       },
       lastName: {
-        type: Sequelize.STRING(64)
+        type: Sequelize.STRING(64),
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
