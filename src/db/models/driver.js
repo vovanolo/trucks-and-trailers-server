@@ -11,10 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Driver.belongsTo(models.User, { foreignKey: 'userId'});
-      Driver.hasMany(models.Truck, { foreignKey: 'driverId'});
-      Driver.hasMany(models.Trailer, { foreignKey: 'driverId'});
-      Driver.hasMany(models.DayInfo, { foreignKey: 'driverId'});
+      Driver.belongsTo(models.User, { foreignKey: 'userId' });
+      Driver.hasMany(models.Truck, { foreignKey: 'driverId' });
+      Driver.hasMany(models.Trailer, { foreignKey: 'driverId' });
+      Driver.hasMany(models.DayInfo, { foreignKey: 'driverId' });
     }
   };
   Driver.init({

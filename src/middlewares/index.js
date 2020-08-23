@@ -1,5 +1,8 @@
 const { Unauthorized } = require('../errors');
 const { verifyJwtToken } = require('../helpers');
+const models = require('../db/models');
+
+const { User } = models;
 
 function notFound(req, res, next) {
   const error = new Error('Not found');
@@ -22,13 +25,34 @@ function errorHandler(err, req, res, next) {
 async function isLoggedIn(req, res, next) {
   try {
     const userToken = req.headers.authorization.split(' ')[1];
+
     const payload = await verifyJwtToken(userToken);
-    const userData = {
-      accessToken: userToken,
-      user: payload
-    };
-    req.user = userData;
-    next();
+
+    const dbUser = await User.findOne({
+      where: {
+        id: payload.id,
+        username: payload.username,
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        role: payload.role
+      },
+      attributes: {
+        exclude: ['password']
+      }
+    });
+
+    if (dbUser === null) {
+      Unauthorized(res, next);
+    }
+    else {
+      const userData = {
+        accessToken: userToken,
+        user: payload
+      };
+      req.user = userData;
+      next();
+    }
+    
   } catch (error) {
     Unauthorized(res, next);
   }

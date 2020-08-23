@@ -16,7 +16,8 @@ module.exports = {
         type: Sequelize.TEXT
       },
       rate: {
-        type: Sequelize.FLOAT
+        type: Sequelize.FLOAT,
+        allowNull: false
       },
       ownedByCompany: {
         type: Sequelize.BOOLEAN,
@@ -24,6 +25,8 @@ module.exports = {
       },
       driverId: {
         type: Sequelize.INTEGER,
+        allowNull: true,
+        onDelete: 'SET NULL',
         references: {
           model: 'Drivers',
           key: 'id'
@@ -32,6 +35,7 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        onDelete: 'CASCADE',
         references: {
           model: 'Users',
           key: 'id'

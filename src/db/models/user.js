@@ -11,10 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasMany(models.Driver, { foreignKey: 'userId'});
-      User.hasMany(models.Truck, { foreignKey: 'userId'});
-      User.hasMany(models.Trailer, { foreignKey: 'userId'});
-      User.hasMany(models.DayInfo, { foreignKey: 'userId'});
+      User.hasMany(models.Driver, { foreignKey: 'userId', onDelete: 'CASCADE' });
+      User.hasMany(models.Truck, { foreignKey: 'userId', onDelete: 'CASCADE' });
+      User.hasMany(models.Trailer, { foreignKey: 'userId', onDelete: 'CASCADE' });
+      User.hasMany(models.DayInfo, { foreignKey: 'userId', onDelete: 'CASCADE' });
     }
 
     async validPassword(password) {

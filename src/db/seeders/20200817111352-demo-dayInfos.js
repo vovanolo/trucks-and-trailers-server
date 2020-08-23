@@ -28,6 +28,7 @@ module.exports = {
         location: 'Amsterdam',
         value: 300,
         driverId: drivers[0].id,
+        userId: users[0].id,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -35,6 +36,7 @@ module.exports = {
         dateTime: new Date(),
         value: 300.197,
         driverId: drivers[1].id,
+        userId: users[0].id,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -43,6 +45,7 @@ module.exports = {
         location: 'Antarctica',
         value: 100,
         driverId: drivers[1].id,
+        userId: users[1].id,
         createdAt: new Date(),
         updatedAt: new Date()
       }
