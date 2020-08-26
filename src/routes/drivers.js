@@ -6,25 +6,37 @@ const { isLoggedIn, isAdmin } = require('../middlewares');
 
 const router = express.Router();
 
-const { Driver } = models;
+const { Driver, User } = models;
 
 router.use(isLoggedIn);
 
 router.get('/', async (req, res, next) => {
   try {
-    const driver = await Driver.findAll({
+    // const drivers = await Driver.findAll({
+    //   include: {
+    //     model: models.User,
+    //     attributes: {
+    //       exclude: ['password']
+    //     }
+    //   },
+    //   attributes: {
+    //     exclude: ['userId']
+    //   }
+    // });
+
+    const drivers = await User.findByPk(req.user.user.id, {
       include: {
-        model: models.User,
+        model: Driver,
         attributes: {
-          exclude: ['password']
+          exclude: ['userId']
         }
       },
       attributes: {
-        exclude: ['userId']
+        exclude: ['password']
       }
     });
 
-    res.json(driver);
+    res.json(drivers.Drivers);
   } catch (error) {
     InternalServerError(res, next, error);
   }
