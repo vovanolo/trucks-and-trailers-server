@@ -68,7 +68,7 @@ router.patch('/:id', async (req, res, next) => {
   try {
     const trailerInput = req.body;
     
-    const updatedTrailer = await Driver.update({ ...trailerInput }, {
+    const updatedTrailer = await Trailer.update({ ...trailerInput }, {
       returning: true,
       where: {
         id: req.params.id
