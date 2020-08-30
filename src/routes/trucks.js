@@ -6,7 +6,7 @@ const { isLoggedIn, isAdmin } = require('../middlewares');
 
 const router = express.Router();
 
-const { Trailer: Truck, User } = models;
+const { Truck, User } = models;
 
 router.use(isLoggedIn);
 
