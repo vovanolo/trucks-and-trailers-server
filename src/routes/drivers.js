@@ -6,7 +6,7 @@ const { isLoggedIn, isAdmin } = require('../middlewares');
 
 const router = express.Router();
 
-const { Driver, User } = models;
+const { Driver, Trailer, Truck, User } = models;
 
 router.use(isLoggedIn);
 
@@ -56,6 +56,22 @@ router.post('/', async (req, res, next) => {
       fields: ['firstName', 'lastName', 'comment', 'rate', 'userId']
     });
 
+    if (driverData.trailerId) {
+      await Trailer.update({ driverId: newDriver.id }, {
+        where: {
+          id: driverData.trailerId
+        }
+      });
+    }
+
+    if (driverData.truckId) {
+      await Truck.update({ driverId: newDriver.id }, {
+        where: {
+          id: driverData.truckId
+        }
+      });
+    }
+
     const driverResponse = JSON.parse(JSON.stringify(newDriver));
 
     res.json(driverResponse);
@@ -75,6 +91,22 @@ router.patch('/:id', async (req, res, next) => {
       },
       fields: ['firstName', 'lastName', 'comment', 'rate']
     });
+
+    if (driverInput.trailerId) {
+      await Trailer.update({ driverId: req.params.id }, {
+        where: {
+          id: driverInput.trailerId
+        }
+      });
+    }
+
+    if (driverInput.truckId) {
+      await Truck.update({ driverId: req.params.id }, {
+        where: {
+          id: driverInput.truckId
+        }
+      });
+    }
 
     const driverResponse = JSON.parse(JSON.stringify(updatedDriver[1]));
 
