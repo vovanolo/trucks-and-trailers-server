@@ -24,7 +24,8 @@ module.exports = {
 
     await queryInterface.bulkInsert('DayInfos', [
       {
-        dateTime: new Date(),
+        date: new Date().toDateString(),
+        time: new Date().getTime(),
         location: 'Amsterdam',
         value: 300,
         driverId: drivers[0].id,
@@ -33,7 +34,8 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        dateTime: new Date(),
+        date: new Date().toDateString(),
+        time: new Date().getTime(),
         value: 300.197,
         driverId: drivers[1].id,
         userId: users[0].id,
@@ -41,7 +43,8 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        dateTime: new Date(),
+        date: new Date().toDateString(),
+        time: new Date().getTime(),
         location: 'Antarctica',
         value: 100,
         driverId: drivers[1].id,

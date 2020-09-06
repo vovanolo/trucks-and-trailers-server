@@ -16,10 +16,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   DayInfo.init({
-    dateTime: {
-      type: DataTypes.DATE,
+    date: {
+      type: DataTypes.STRING,
       allowNull: false
     },
+    time: DataTypes.STRING,
     location: DataTypes.STRING,
     value: DataTypes.FLOAT,
     status: {
