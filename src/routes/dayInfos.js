@@ -15,35 +15,11 @@ router.post('/', async (req, res, next) => {
   const dates = req.body.dates;
 
   try {
-    // const userDrivers = await User.findByPk(req.user.user.id, {
-    //   include: [
-    //     {
-    //       model: Driver,
-    //       include: [
-    //         {
-    //           model: Truck
-    //         },
-    //         {
-    //           model: Trailer
-    //         },
-    //         {
-    //           model: DayInfo,
-    //           where: {
-    //             date: {
-    //               [Op.or]: dates
-    //             }
-    //           }
-    //         }
-    //       ]
-    //     }
-    //   ]
-    // });
-
     const drivers = await Driver.findAll({
       where: {
-        userId: req.user.user.id
+        userId: req.user.user.id,
       },
-      include: [Truck, Trailer]
+      include: [Truck, Trailer],
     });
 
     const driverIds = drivers.map((driver) => driver.id);
@@ -53,16 +29,16 @@ router.post('/', async (req, res, next) => {
         [Op.and]: [
           {
             driverId: {
-              [Op.or]: driverIds
-            }
+              [Op.or]: driverIds,
+            },
           },
           {
             date: {
-              [Op.or]: dates
-            }
-          }
-        ]
-      }
+              [Op.or]: dates,
+            },
+          },
+        ],
+      },
     });
 
     const response = JSON.parse(JSON.stringify(drivers)).map((driver) => {
@@ -75,16 +51,21 @@ router.post('/', async (req, res, next) => {
         }
       });
 
-      console.log(newDriver.DayInfos);
-
       return newDriver;
     });
-
-    console.log(response);
 
     res.json(response);
   } catch (error) {
     InternalServerError(res, next, error);
+  }
+});
+
+router.post('/:id', async (req, res, next) => {
+  try {
+    const dayInfo = await DayInfo.findByPk(req.params.id);
+    res.json(dayInfo);
+  } catch (error) {
+    InternalServerError(error);
   }
 });
 
