@@ -96,4 +96,33 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+router.patch('/:id', async (req, res, next) => {
+  try {
+    const body = {
+      ...req.body,
+      userId: req.user.user.id,
+    };
+
+    const updatedDayInfo = await DayInfo.update(body, {
+      returning: true,
+      where: {
+        id: req.params.id,
+      },
+      fields: [
+        'date',
+        'time',
+        'location',
+        'value',
+        'status',
+        'driverId',
+        'userId',
+      ],
+    });
+
+    res.json(JSON.parse(JSON.stringify(updatedDayInfo[1][0])));
+  } catch (error) {
+    InternalServerError(res, next, error);
+  }
+});
+
 module.exports = router;
