@@ -11,7 +11,7 @@ const { DayInfo, Driver, Truck, Trailer, User } = models;
 
 router.use(isLoggedIn);
 
-router.post('/', async (req, res, next) => {
+router.post('/all', async (req, res, next) => {
   const dates = req.body.dates;
 
   try {
@@ -60,12 +60,39 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.post('/:id', async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const dayInfo = await DayInfo.findByPk(req.params.id);
     res.json(dayInfo);
   } catch (error) {
     InternalServerError(error);
+  }
+});
+
+router.post('/', async (req, res, next) => {
+  try {
+    const dayInfoData = {
+      ...req.body,
+      userId: req.user.user.id,
+    };
+
+    const newDayInfo = await DayInfo.create(dayInfoData, {
+      fields: [
+        'date',
+        'time',
+        'location',
+        'value',
+        'status',
+        'driverId',
+        'userId',
+      ],
+    });
+
+    const response = JSON.parse(JSON.stringify(newDayInfo));
+
+    res.json(response);
+  } catch (error) {
+    InternalServerError(res, next, error);
   }
 });
 
