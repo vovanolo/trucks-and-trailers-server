@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Trailer extends Model {
     /**
@@ -13,20 +11,25 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Trailer.belongsTo(models.User, { foreignKey: 'userId' });
       Trailer.belongsTo(models.Driver, { foreignKey: 'driverId' });
+
+      Trailer.hasOne(models.Driver, { foreignKey: 'trailerId' });
     }
-  };
-  Trailer.init({
-    name: {
-      type: DataTypes.STRING(64),
-      allowNull: false
+  }
+  Trailer.init(
+    {
+      name: {
+        type: DataTypes.STRING(64),
+        allowNull: false,
+      },
+      comment: DataTypes.TEXT,
+      location: DataTypes.STRING,
+      driverId: DataTypes.INTEGER,
+      userId: DataTypes.INTEGER,
     },
-    comment: DataTypes.TEXT,
-    location: DataTypes.STRING,
-    driverId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'Trailer'
-  });
+    {
+      sequelize,
+      modelName: 'Trailer',
+    }
+  );
   return Trailer;
 };

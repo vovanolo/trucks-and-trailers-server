@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Driver extends Model {
     /**
@@ -12,32 +10,39 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Driver.belongsTo(models.User, { foreignKey: 'userId' });
-      Driver.hasMany(models.Truck, { foreignKey: 'driverId' });
-      Driver.hasMany(models.Trailer, { foreignKey: 'driverId' });
+      Driver.belongsTo(models.Truck, { foreignKey: 'truckId' });
+      Driver.belongsTo(models.Trailer, { foreignKey: 'trailerId' });
+
+      Driver.hasOne(models.Truck, { foreignKey: 'driverId' });
+      Driver.hasOne(models.Trailer, { foreignKey: 'driverId' });
+
       Driver.hasMany(models.DayInfo, { foreignKey: 'driverId' });
     }
-  };
-  Driver.init({
-    firstName: {
-      type: DataTypes.STRING(64),
-      allowNull: false
+  }
+  Driver.init(
+    {
+      firstName: {
+        type: DataTypes.STRING(64),
+        allowNull: false,
+      },
+      lastName: DataTypes.STRING(64),
+      comment: DataTypes.TEXT,
+      rate: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+      },
+      userId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+      },
     },
-    lastName: DataTypes.STRING(64),
-    comment: DataTypes.TEXT,
-    rate: {
-      type: DataTypes.FLOAT,
-      allowNull: false
-    },
-    userId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'Users',
-        key: 'id'
-      }
+    {
+      sequelize,
+      modelName: 'Driver',
     }
-  }, {
-    sequelize,
-    modelName: 'Driver'
-  });
+  );
   return Driver;
 };

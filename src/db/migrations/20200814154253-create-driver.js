@@ -6,21 +6,21 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       firstName: {
         type: Sequelize.STRING(64),
-        allowNull: false
+        allowNull: false,
       },
       lastName: {
-        type: Sequelize.STRING(64)
+        type: Sequelize.STRING(64),
       },
       comment: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
       rate: {
         type: Sequelize.FLOAT,
-        allowNull: false
+        allowNull: false,
       },
       userId: {
         type: Sequelize.INTEGER,
@@ -28,20 +28,38 @@ module.exports = {
         onDelete: 'CASCADE',
         references: {
           model: 'Users',
-          key: 'id'
-        }
+          key: 'id',
+        },
+      },
+      truckId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        onDelete: 'SET NULL',
+        references: {
+          model: 'Trucks',
+          key: 'id',
+        },
+      },
+      trailerId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        onDelete: 'SET NULL',
+        references: {
+          model: 'Trailers',
+          key: 'id',
+        },
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('Drivers');
-  }
+  },
 };
