@@ -6,22 +6,22 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       name: {
         type: Sequelize.STRING(64),
-        allowNull: false
+        allowNull: false,
       },
       comment: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
       rate: {
         type: Sequelize.FLOAT,
-        allowNull: false
+        allowNull: false,
       },
       ownedByCompany: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       driverId: {
         type: Sequelize.INTEGER,
@@ -29,8 +29,8 @@ module.exports = {
         onDelete: 'SET NULL',
         references: {
           model: 'Drivers',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       userId: {
         type: Sequelize.INTEGER,
@@ -38,20 +38,20 @@ module.exports = {
         onDelete: 'CASCADE',
         references: {
           model: 'Users',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('Trucks');
-  }
+  },
 };

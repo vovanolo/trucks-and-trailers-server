@@ -10,8 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Driver.belongsTo(models.User, { foreignKey: 'userId' });
-      Driver.belongsTo(models.Truck, { foreignKey: 'truckId' });
-      Driver.belongsTo(models.Trailer, { foreignKey: 'trailerId' });
 
       Driver.hasOne(models.Truck, { foreignKey: 'driverId' });
       Driver.hasOne(models.Trailer, { foreignKey: 'driverId' });
@@ -31,13 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.FLOAT,
         allowNull: false,
       },
-      userId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: 'Users',
-          key: 'id',
-        },
-      },
+      userId: DataTypes.INTEGER,
     },
     {
       sequelize,

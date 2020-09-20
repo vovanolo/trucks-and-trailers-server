@@ -16,12 +16,13 @@ router.get('/', async (req, res, next) => {
       include: {
         model: Driver,
         attributes: {
-          exclude: ['userId']
-        }
+          exclude: ['userId'],
+        },
+        include: [Truck, Trailer],
       },
       attributes: {
-        exclude: ['password']
-      }
+        exclude: ['password'],
+      },
     });
 
     res.json(drivers.Drivers);
@@ -36,8 +37,7 @@ router.get('/:id', async (req, res, next) => {
 
     if (!driver) {
       NotFound(res, next);
-    }
-    else {
+    } else {
       res.json(driver);
     }
   } catch (error) {
@@ -49,27 +49,33 @@ router.post('/', async (req, res, next) => {
   try {
     const driverData = {
       ...req.body,
-      userId: req.user.user.id
+      userId: req.user.user.id,
     };
 
     const newDriver = await Driver.create(driverData, {
-      fields: ['firstName', 'lastName', 'comment', 'rate', 'userId']
+      fields: ['firstName', 'lastName', 'comment', 'rate', 'userId'],
     });
 
     if (driverData.trailerId) {
-      await Trailer.update({ driverId: newDriver.id }, {
-        where: {
-          id: driverData.trailerId
+      await Trailer.update(
+        { driverId: newDriver.id },
+        {
+          where: {
+            id: driverData.trailerId,
+          },
         }
-      });
+      );
     }
 
     if (driverData.truckId) {
-      await Truck.update({ driverId: newDriver.id }, {
-        where: {
-          id: driverData.truckId
+      await Truck.update(
+        { driverId: newDriver.id },
+        {
+          where: {
+            id: driverData.truckId,
+          },
         }
-      });
+      );
     }
 
     const driverResponse = JSON.parse(JSON.stringify(newDriver));
@@ -83,29 +89,38 @@ router.post('/', async (req, res, next) => {
 router.patch('/:id', async (req, res, next) => {
   try {
     const driverInput = req.body;
-    
-    const updatedDriver = await Driver.update({ ...driverInput }, {
-      returning: true,
-      where: {
-        id: req.params.id
-      },
-      fields: ['firstName', 'lastName', 'comment', 'rate']
-    });
+
+    const updatedDriver = await Driver.update(
+      { ...driverInput },
+      {
+        returning: true,
+        where: {
+          id: req.params.id,
+        },
+        fields: ['firstName', 'lastName', 'comment', 'rate'],
+      }
+    );
 
     if (driverInput.trailerId) {
-      await Trailer.update({ driverId: req.params.id }, {
-        where: {
-          id: driverInput.trailerId
+      await Trailer.update(
+        { driverId: req.params.id },
+        {
+          where: {
+            id: driverInput.trailerId,
+          },
         }
-      });
+      );
     }
 
     if (driverInput.truckId) {
-      await Truck.update({ driverId: req.params.id }, {
-        where: {
-          id: driverInput.truckId
+      await Truck.update(
+        { driverId: req.params.id },
+        {
+          where: {
+            id: driverInput.truckId,
+          },
         }
-      });
+      );
     }
 
     const driverResponse = JSON.parse(JSON.stringify(updatedDriver[1]));
@@ -122,8 +137,7 @@ router.delete('/:id', async (req, res, next) => {
 
     if (!driver) {
       NotFound(res, next);
-    }
-    else {
+    } else {
       await driver.destroy();
       res.json(`Driver ${req.params.id} removed successfully`);
     }
