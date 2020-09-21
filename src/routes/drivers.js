@@ -88,42 +88,30 @@ router.post('/', async (req, res, next) => {
 
 router.patch('/:id', async (req, res, next) => {
   try {
-    const driverInput = req.body;
+    await Driver.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+      fields: ['firstName', 'lastName', 'comment', 'rate'],
+    });
 
-    const updatedDriver = await Driver.update(
-      { ...driverInput },
-      {
-        returning: true,
-        where: {
-          id: req.params.id,
-        },
-        fields: ['firstName', 'lastName', 'comment', 'rate'],
-      }
-    );
+    const editedDriver = await Driver.findByPk(req.params.id);
 
-    if (driverInput.trailerId) {
-      await Trailer.update(
-        { driverId: req.params.id },
-        {
-          where: {
-            id: driverInput.trailerId,
-          },
-        }
-      );
-    }
+    const newTruck = req.body.truckId
+      ? await Truck.findByPk(req.body.truckId)
+      : null;
+    const newTrailer = req.body.trailerId
+      ? await Truck.findByPk(req.body.trailerId)
+      : null;
 
-    if (driverInput.truckId) {
-      await Truck.update(
-        { driverId: req.params.id },
-        {
-          where: {
-            id: driverInput.truckId,
-          },
-        }
-      );
-    }
+    await editedDriver.setTruck(newTruck ? newTruck.id : null);
+    await editedDriver.setTrailer(newTrailer ? newTrailer.id : null);
 
-    const driverResponse = JSON.parse(JSON.stringify(updatedDriver[1]));
+    editedDriver.save();
+
+    const driverResponse = await Driver.findByPk(req.params.id, {
+      include: [Trailer, Truck],
+    });
 
     res.json(driverResponse);
   } catch (error) {
