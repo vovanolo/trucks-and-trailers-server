@@ -6,24 +6,27 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       date: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       time: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       location: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       value: {
-        type: Sequelize.FLOAT
+        type: Sequelize.FLOAT,
+      },
+      miles: {
+        type: Sequelize.FLOAT,
       },
       status: {
         type: Sequelize.ENUM('off', 'localRun', 'inTransit'),
-        defaultValue: 'off'
+        defaultValue: 'off',
       },
       driverId: {
         type: Sequelize.INTEGER,
@@ -31,8 +34,8 @@ module.exports = {
         onDelete: 'CASCADE',
         references: {
           model: 'Drivers',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       userId: {
         type: Sequelize.INTEGER,
@@ -40,20 +43,20 @@ module.exports = {
         onDelete: 'CASCADE',
         references: {
           model: 'Users',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('DayInfos');
-  }
+  },
 };

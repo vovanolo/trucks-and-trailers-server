@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class DayInfo extends Model {
     /**
@@ -14,24 +12,28 @@ module.exports = (sequelize, DataTypes) => {
       DayInfo.belongsTo(models.Driver, { foreignKey: 'driverId' });
       DayInfo.belongsTo(models.User, { foreignKey: 'userId' });
     }
-  };
-  DayInfo.init({
-    date: {
-      type: DataTypes.STRING,
-      allowNull: false
+  }
+  DayInfo.init(
+    {
+      date: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      time: DataTypes.STRING,
+      location: DataTypes.STRING,
+      value: DataTypes.FLOAT,
+      miles: DataTypes.INTEGER,
+      status: {
+        type: DataTypes.ENUM('off', 'localRun', 'inTransit'),
+        defaultValue: 'off',
+      },
+      driverId: DataTypes.INTEGER,
+      userId: DataTypes.INTEGER,
     },
-    time: DataTypes.STRING,
-    location: DataTypes.STRING,
-    value: DataTypes.FLOAT,
-    status: {
-      type: DataTypes.ENUM('off', 'localRun', 'inTransit'),
-      defaultValue: 'off'
-    },
-    driverId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'DayInfo'
-  });
+    {
+      sequelize,
+      modelName: 'DayInfo',
+    }
+  );
   return DayInfo;
 };
