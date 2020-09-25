@@ -16,7 +16,7 @@ function errorHandler(err, req, res, next) {
   const responseMessage = {
     error: err.message,
     code: statusCode,
-    stack: err.stack
+    stack: process.env.NODE_ENV === 'production' ? '...' : err.stack,
   };
   console.error(responseMessage);
   res.status(statusCode).json(responseMessage);
@@ -34,25 +34,23 @@ async function isLoggedIn(req, res, next) {
         username: payload.username,
         firstName: payload.firstName,
         lastName: payload.lastName,
-        role: payload.role
+        role: payload.role,
       },
       attributes: {
-        exclude: ['password']
-      }
+        exclude: ['password'],
+      },
     });
 
     if (dbUser === null) {
       Unauthorized(res, next);
-    }
-    else {
+    } else {
       const userData = {
         accessToken: userToken,
-        user: payload
+        user: payload,
       };
       req.user = userData;
       next();
     }
-    
   } catch (error) {
     Unauthorized(res, next);
   }
@@ -61,8 +59,7 @@ async function isLoggedIn(req, res, next) {
 async function isAdmin(req, res, next) {
   if (req.user.user.role !== 'admin') {
     Unauthorized(res, next);
-  }
-  else {
+  } else {
     next();
   }
 }
@@ -71,5 +68,5 @@ module.exports = {
   notFound,
   errorHandler,
   isLoggedIn,
-  isAdmin
+  isAdmin,
 };
