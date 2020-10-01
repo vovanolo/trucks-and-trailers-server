@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Trailer.belongsTo(models.User, { foreignKey: 'userId' });
       Trailer.belongsTo(models.Driver, { foreignKey: 'driverId' });
+
+      Trailer.hasOne(models.Company, { foreignKey: 'trailerId' });
     }
   }
   Trailer.init(

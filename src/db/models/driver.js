@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Driver.belongsTo(models.User, { foreignKey: 'userId' });
 
+      Driver.hasOne(models.Company, { foreignKey: 'driverId' });
       Driver.hasOne(models.Truck, { foreignKey: 'driverId' });
       Driver.hasOne(models.Trailer, { foreignKey: 'driverId' });
 

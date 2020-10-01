@@ -19,10 +19,6 @@ module.exports = {
         type: Sequelize.FLOAT,
         allowNull: false,
       },
-      ownedByCompany: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
-      },
       driverId: {
         type: Sequelize.INTEGER,
         allowNull: true,

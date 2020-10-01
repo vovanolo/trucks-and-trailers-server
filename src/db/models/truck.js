@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Truck.belongsTo(models.User, { foreignKey: 'userId' });
       Truck.belongsTo(models.Driver, { foreignKey: 'driverId' });
+
+      Truck.hasOne(models.Company, { foreignKey: 'truckId' });
     }
   }
   Truck.init(
@@ -21,10 +23,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       comment: DataTypes.TEXT,
       rate: DataTypes.FLOAT,
-      ownedByCompany: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
       driverId: DataTypes.INTEGER,
       userId: DataTypes.INTEGER,
     },
