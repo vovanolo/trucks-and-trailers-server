@@ -6,6 +6,7 @@ const drivers = require('./drivers');
 const trailers = require('./trailers');
 const trucks = require('./trucks');
 const dayInfos = require('./dayInfos');
+const companies = require('./companies');
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.use('/drivers', drivers);
 router.use('/trailers', trailers);
 router.use('/trucks', trucks);
 router.use('/dayInfos', dayInfos);
+router.use('/companies', companies);
 
 module.exports = router;
