@@ -125,6 +125,7 @@ router.delete('/:id', async (req, res, next) => {
 
     if (!driver) {
       NotFound(res, next);
+      return;
     } else {
       await driver.destroy();
       res.json(`Driver ${req.params.id} removed successfully`);
