@@ -122,12 +122,9 @@ router.patch('/:id', async (req, res, next) => {
 
     await editedDriver.setTruck(newTruck ? newTruck.id : null);
     await editedDriver.setTrailer(newTrailer ? newTrailer.id : null);
+    await editedDriver.setCompany(newCompany ? newCompany.id : null);
 
     editedDriver.save();
-
-    if (newCompany) {
-      await newCompany.SetDriver(editedDriver.id);
-    }
 
     const driverResponse = await Driver.findByPk(req.params.id, {
       include: [Trailer, Truck, Company],
@@ -147,6 +144,7 @@ router.delete('/:id', async (req, res, next) => {
       NotFound(res, next);
       return;
     } else {
+      await driver.setCompany(null);
       await driver.destroy();
       res.json(`Driver ${req.params.id} removed successfully`);
     }

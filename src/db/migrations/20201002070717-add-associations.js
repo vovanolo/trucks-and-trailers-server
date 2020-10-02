@@ -8,32 +8,32 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.addColumn('Drivers', 'companyId', {
+    await queryInterface.addColumn('Companies', 'driverId', {
       type: Sequelize.INTEGER,
       allowNull: true,
       onDelete: 'SET NULL',
       references: {
-        model: 'Companies',
+        model: 'Drivers',
         key: 'id',
       },
     });
 
-    await queryInterface.addColumn('Trucks', 'companyId', {
+    await queryInterface.addColumn('Companies', 'truckId', {
       type: Sequelize.INTEGER,
       allowNull: true,
       onDelete: 'SET NULL',
       references: {
-        model: 'Companies',
+        model: 'Trucks',
         key: 'id',
       },
     });
 
-    await queryInterface.addColumn('Trailers', 'companyId', {
+    await queryInterface.addColumn('Companies', 'trailerId', {
       type: Sequelize.INTEGER,
       allowNull: true,
       onDelete: 'SET NULL',
       references: {
-        model: 'Companies',
+        model: 'Trailers',
         key: 'id',
       },
     });

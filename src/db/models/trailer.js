@@ -9,9 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Trailer.hasOne(models.Company, { foreignKey: 'trailerId' });
+
       Trailer.belongsTo(models.User, { foreignKey: 'userId' });
       Trailer.belongsTo(models.Driver, { foreignKey: 'driverId' });
-      Trailer.belongsTo(models.Company, { foreignKey: 'companyId' });
     }
   }
   Trailer.init(
@@ -23,7 +24,6 @@ module.exports = (sequelize, DataTypes) => {
       comment: DataTypes.TEXT,
       location: DataTypes.STRING,
       driverId: DataTypes.INTEGER,
-      companyId: DataTypes.INTEGER,
       userId: DataTypes.INTEGER,
     },
     {
