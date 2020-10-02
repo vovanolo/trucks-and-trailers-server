@@ -7,7 +7,7 @@ const { isLoggedIn, isAdmin } = require('../middlewares');
 
 const router = express.Router();
 
-const { DayInfo, Driver, Truck, Trailer, User } = models;
+const { DayInfo, Company, Driver, Truck, Trailer, User } = models;
 
 router.use(isLoggedIn);
 
@@ -19,7 +19,7 @@ router.post('/all', async (req, res, next) => {
       where: {
         userId: req.user.user.id,
       },
-      include: [Truck, Trailer],
+      include: [Truck, Trailer, Company],
     });
 
     const driverIds = drivers.map((driver) => driver.id);
