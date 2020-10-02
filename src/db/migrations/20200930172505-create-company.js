@@ -11,33 +11,6 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
       },
-      driverId: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        onDelete: 'SET NULL',
-        references: {
-          model: 'Drivers',
-          key: 'id',
-        },
-      },
-      truckId: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        onDelete: 'SET NULL',
-        references: {
-          model: 'Trucks',
-          key: 'id',
-        },
-      },
-      trailerId: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        onDelete: 'SET NULL',
-        references: {
-          model: 'Trailers',
-          key: 'id',
-        },
-      },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,

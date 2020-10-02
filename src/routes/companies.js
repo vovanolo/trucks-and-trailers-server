@@ -57,9 +57,15 @@ router.post('/', async (req, res, next) => {
       return;
     }
 
-    const newCompany = await Company.create(req.body, {
-      fields: ['name', 'driverId', 'truckId', 'trailerId', 'userId'],
-    });
+    const newCompany = await Company.create(
+      {
+        ...data,
+        userId: req.user.user.id,
+      },
+      {
+        fields: ['name', 'driverId', 'truckId', 'trailerId', 'userId'],
+      }
+    );
 
     res.json(newCompany);
   } catch (error) {

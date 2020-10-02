@@ -6,7 +6,7 @@ const { isLoggedIn, isAdmin } = require('../middlewares');
 
 const router = express.Router();
 
-const { Driver, Trailer, Truck, User } = models;
+const { Driver, Trailer, Truck, Company, User } = models;
 
 router.use(isLoggedIn);
 
@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
         attributes: {
           exclude: ['userId'],
         },
-        include: [Truck, Trailer],
+        include: [Truck, Trailer, Company],
       },
       attributes: {
         exclude: ['password'],
@@ -78,6 +78,17 @@ router.post('/', async (req, res, next) => {
       );
     }
 
+    if (driverData.companyId) {
+      await Company.update(
+        { driverId: newDriver.id },
+        {
+          where: {
+            id: driverData.companyId,
+          },
+        }
+      );
+    }
+
     const driverResponse = JSON.parse(JSON.stringify(newDriver));
 
     res.json(driverResponse);
@@ -100,8 +111,13 @@ router.patch('/:id', async (req, res, next) => {
     const newTruck = req.body.truckId
       ? await Truck.findByPk(req.body.truckId)
       : null;
+
     const newTrailer = req.body.trailerId
-      ? await Truck.findByPk(req.body.trailerId)
+      ? await Trailer.findByPk(req.body.trailerId)
+      : null;
+
+    const newCompany = req.body.companyId
+      ? await Company.findByPk(req.body.companyId)
       : null;
 
     await editedDriver.setTruck(newTruck ? newTruck.id : null);
@@ -109,8 +125,12 @@ router.patch('/:id', async (req, res, next) => {
 
     editedDriver.save();
 
+    if (newCompany) {
+      await newCompany.SetDriver(editedDriver.id);
+    }
+
     const driverResponse = await Driver.findByPk(req.params.id, {
-      include: [Trailer, Truck],
+      include: [Trailer, Truck, Company],
     });
 
     res.json(driverResponse);

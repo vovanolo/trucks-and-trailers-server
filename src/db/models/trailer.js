@@ -11,8 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Trailer.belongsTo(models.User, { foreignKey: 'userId' });
       Trailer.belongsTo(models.Driver, { foreignKey: 'driverId' });
-
-      Trailer.hasOne(models.Company, { foreignKey: 'trailerId' });
+      Trailer.belongsTo(models.Company, { foreignKey: 'companyId' });
     }
   }
   Trailer.init(
@@ -24,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       comment: DataTypes.TEXT,
       location: DataTypes.STRING,
       driverId: DataTypes.INTEGER,
+      companyId: DataTypes.INTEGER,
       userId: DataTypes.INTEGER,
     },
     {
