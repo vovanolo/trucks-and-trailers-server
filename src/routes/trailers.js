@@ -6,25 +6,22 @@ const { isLoggedIn, isAdmin } = require('../middlewares');
 
 const router = express.Router();
 
-const { Trailer, User } = models;
+const { Trailer, Company, User } = models;
 
 router.use(isLoggedIn);
 
 router.get('/', async (req, res, next) => {
   try {
-    const trailers = await User.findByPk(req.user.user.id, {
-      include: {
-        model: Trailer,
-        attributes: {
-          exclude: ['userId']
-        }
+    const trailers = await Trailer.findAll({
+      where: {
+        userId: req.user.user.id,
       },
-      attributes: {
-        exclude: ['password']
-      }
+      include: {
+        model: Company,
+      },
     });
 
-    res.json(trailers.Trailers);
+    res.json(trailers);
   } catch (error) {
     InternalServerError(res, next, error);
   }
@@ -36,8 +33,7 @@ router.get('/:id', async (req, res, next) => {
 
     if (!trailer) {
       NotFound(res, next);
-    }
-    else {
+    } else {
       res.json(trailer);
     }
   } catch (error) {
@@ -49,12 +45,23 @@ router.post('/', async (req, res, next) => {
   try {
     const trailerData = {
       ...req.body,
-      userId: req.user.user.id
+      userId: req.user.user.id,
     };
 
     const newTrailer = await Trailer.create(trailerData, {
-      fields: ['name', 'comment', 'location', 'userId']
+      fields: ['name', 'comment', 'location', 'userId'],
     });
+
+    if (trailerData.companyId) {
+      await Company.update(
+        { trailerId: newTrailer.id },
+        {
+          where: {
+            id: trailerData.companyId,
+          },
+        }
+      );
+    }
 
     const trailerResponse = JSON.parse(JSON.stringify(newTrailer));
 
@@ -67,14 +74,17 @@ router.post('/', async (req, res, next) => {
 router.patch('/:id', async (req, res, next) => {
   try {
     const trailerInput = req.body;
-    
-    const updatedTrailer = await Trailer.update({ ...trailerInput }, {
-      returning: true,
-      where: {
-        id: req.params.id
-      },
-      fields: ['name', 'comment', 'location', 'driverId']
-    });
+
+    const updatedTrailer = await Trailer.update(
+      { ...trailerInput },
+      {
+        returning: true,
+        where: {
+          id: req.params.id,
+        },
+        fields: ['name', 'comment', 'location', 'driverId'],
+      }
+    );
 
     const trailerResponse = JSON.parse(JSON.stringify(updatedTrailer[1]));
 
@@ -90,8 +100,7 @@ router.delete('/:id', async (req, res, next) => {
 
     if (!trailer) {
       NotFound(res, next);
-    }
-    else {
+    } else {
       await trailer.destroy();
       res.json(`Trailer ${req.params.id} removed successfully`);
     }
