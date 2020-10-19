@@ -15,8 +15,8 @@ router.get('/', async (req, res, next) => {
   try {
     const users = await User.findAll({
       attributes: {
-        exclude: ['password']
-      }
+        exclude: ['password'],
+      },
     });
 
     res.json(users);
@@ -29,14 +29,13 @@ router.get('/:id', async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id, {
       attributes: {
-        exclude: ['password']
-      }
+        exclude: ['password'],
+      },
     });
 
     if (!user) {
       NotFound(res, next);
-    }
-    else {
+    } else {
       res.json(user);
     }
   } catch (error) {
@@ -46,11 +45,14 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const newUser = await User.create({
-      ...req.body
-    }, {
-      fields: ['username', 'password', 'firstName', 'lastName', 'role']
-    });
+    const newUser = await User.create(
+      {
+        ...req.body,
+      },
+      {
+        fields: ['username', 'password', 'firstName', 'lastName', 'role'],
+      }
+    );
 
     const userResponse = JSON.parse(JSON.stringify(newUser));
     delete userResponse.password;
@@ -63,15 +65,34 @@ router.post('/', async (req, res, next) => {
 
 router.patch('/:id', async (req, res, next) => {
   try {
-    const userInput = req.body;
-    
-    const updatedUser = await User.update({ ...userInput }, {
-      returning: true,
-      where: {
-        id: req.params.id
-      },
-      fields: ['firstName', 'lastName', 'username', 'password', 'role']
-    });
+    const userInput = { ...req.body };
+    let updatedUser = null;
+
+    console.log(userInput.password);
+
+    if (!userInput.password || userInput.password.length <= 0) {
+      updatedUser = await User.update(
+        { ...userInput },
+        {
+          returning: true,
+          where: {
+            id: req.params.id,
+          },
+          fields: ['firstName', 'lastName', 'username', 'role'],
+        }
+      );
+    } else {
+      updatedUser = await User.update(
+        { ...userInput },
+        {
+          returning: true,
+          where: {
+            id: req.params.id,
+          },
+          fields: ['firstName', 'lastName', 'username', 'password', 'role'],
+        }
+      );
+    }
 
     const userResponse = JSON.parse(JSON.stringify(updatedUser[1]));
     userResponse.forEach((userData) => delete userData.password);
@@ -88,8 +109,7 @@ router.delete('/:id', async (req, res, next) => {
 
     if (!user) {
       NotFound(res, next);
-    }
-    else {
+    } else {
       await user.destroy();
       res.json(`User ${req.params.id} deleted successfully`);
     }
