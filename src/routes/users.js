@@ -68,8 +68,6 @@ router.patch('/:id', async (req, res, next) => {
     const userInput = { ...req.body };
     let updatedUser = null;
 
-    console.log(userInput.password);
-
     if (!userInput.password || userInput.password.length <= 0) {
       updatedUser = await User.update(
         { ...userInput },
